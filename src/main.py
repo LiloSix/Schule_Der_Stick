@@ -70,28 +70,28 @@ def popup_bonus():
     win = tk.Toplevel()
     win.minsize(200, 150)
     win.wm_title("Stichworte/Tags bearbeiten")
+    win.config(bg=BG_COL)
 
-    win.columnconfigure([0, 1, 2], minsize=5, weight=1)
-    win.rowconfigure([0, 1, 2], minsize=5, weight=1)
+    win.columnconfigure([0, 1, 2, 3], minsize=5, weight=1)
+    win.rowconfigure([0, 1, 2, 3, 4, 5], minsize=5, weight=1)
 
+    header = tk.Label(win, text="Stichwort/Tags bearbeiten", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
+    header.grid(row=1, column=1, columnspan=2, sticky="w")
 
-    header = tk.Label(win, text="Stichwort/Tags bearbeiten", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
-    header.grid(row=0, column=0, columnspan=3, sticky="w", padx=3)
-
-    input1 = tk.Entry(win, width=31, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
-    input1.grid(row=1, column=0, columnspan=3, sticky="w", padx=5)
+    input1 = tk.Entry(win, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
+    input1.grid(row=2, column=1, columnspan=2, sticky="we", pady=5, padx=5)
 
     remove = tk.Button(win, text="entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
-    remove.grid(row=2, column=0, sticky="w", padx=5)
+    remove.grid(row=3, column=1, sticky="wn", padx=5)
 
     add_tags = tk.Button(win, text="Tag hinzufügen",width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
-    add_tags.grid(row=2, column=1, sticky="e", padx=5)
+    add_tags.grid(row=3, column=2, sticky="en", padx=5)
 
-    update = tk.Button(win, text="Index aktualisieren", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
-    update.grid(row=3, column=0, sticky="w", padx=5, pady=10)
+    update = tk.Button(win, text="Index\naktualisieren", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+    update.grid(row=4, column=1, sticky="ws", padx=5)
 
     b = tk.Button(win, text="Schließen", command=win.destroy, width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
-    b.grid(row=3, column=1, sticky="e", padx=5, pady=10)
+    b.grid(row=4, column=2, sticky="es", padx=5)
 
 
 # --------------- UI ---------------
@@ -119,7 +119,8 @@ lbl_descr = tk.Label(fr_main, text="Unterrichtsvorbereitung", font=FT_LBL_DESCR,
 lbl_search = tk.Label(fr_main, text="Suche", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
 lbl_results = tk.Label(fr_main, text="Ergebnisse", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
 
-btn_tags = tk.Button(fr_main, text="Stichworte\nbearbeiten", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+btn_tags = tk.Button(fr_main, text="Stichworte\nbearbeiten", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
+                     command=popup_bonus)
 btn_search = tk.Button(fr_main, text="Suche", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
                        command=testing_list)
 btn_save = tk.Button(fr_main, text="Unterrichtseinheit\nspeichern", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
