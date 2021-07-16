@@ -55,7 +55,7 @@ def save_selection():
     lbx_choice.delete(0, tk.END)
     check_delete.set(0)
 
-    print(f"Values ={values}, {chkbx}")
+    print(f"Values ={values}, Checked: {chkbx}")
 
 
 def is_checked():
@@ -98,7 +98,7 @@ def popup_bonus():
 
 
 window = tk.Tk()
-window.title("Der Stick")
+window.title("Der Schtick")
 window.config(bg="#EBF2F5")
 window.iconbitmap("images/search-16.ico")
 
@@ -112,9 +112,9 @@ fr_main.grid(column=1, row=1, sticky="news")
 fr_main.columnconfigure([0, 1, 2, 3, 4, 5], minsize=10)
 fr_main.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=10)
 
-# ------------ Widgets ------------
+# ------------ Mainframe Widgets ------------
 
-lbl_title = tk.Label(fr_main, text="Der Stick", font=FT_LBL_TITLE, fg=FG_LBL_COL, bg=BG_COL)
+lbl_title = tk.Label(fr_main, text="Der Schtick", font=FT_LBL_TITLE, fg=FG_LBL_COL, bg=BG_COL)
 lbl_descr = tk.Label(fr_main, text="Unterrichtsvorbereitung", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
 lbl_search = tk.Label(fr_main, text="Suche", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
 lbl_results = tk.Label(fr_main, text="Ergebnisse", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
@@ -132,7 +132,7 @@ ent_search = tk.Entry(fr_main, highlightthickness=1, highlightbackground=HL_COL,
 
 fr_choice_results = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="multiple")
+lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
 scroll_results = tk.Scrollbar(fr_choice_results)
 lbx_results.config(yscrollcommand=scroll_results.set)
 scroll_results.config(command=lbx_results.yview)
@@ -150,7 +150,7 @@ btn_remove_files = tk.Button(fr_choice_btns, text="<- Entfernen", width=10, font
 
 fr_choice = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="multiple")
+lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
 scroll_choice = tk.Scrollbar(fr_choice, highlightthickness=1, highlightbackground=HL_COL)
 lbx_choice.config(yscrollcommand=scroll_choice.set)
 scroll_choice.config(command=lbx_choice.yview)
