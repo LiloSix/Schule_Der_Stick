@@ -65,6 +65,35 @@ def is_checked():
         return "false"
 
 
+# -------------Pop-Up---------------
+def popup_bonus():
+    win = tk.Toplevel()
+    win.minsize(200, 150)
+    win.wm_title("Stichworte/Tags bearbeiten")
+
+    win.columnconfigure([0, 1, 2], minsize=5, weight=1)
+    win.rowconfigure([0, 1, 2], minsize=5, weight=1)
+
+
+    header = tk.Label(win, text="Stichwort/Tags bearbeiten", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
+    header.grid(row=0, column=0, columnspan=3, sticky="w", padx=3)
+
+    input1 = tk.Entry(win, width=31, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
+    input1.grid(row=1, column=0, columnspan=3, sticky="w", padx=5)
+
+    remove = tk.Button(win, text="entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+    remove.grid(row=2, column=0, sticky="w", padx=5)
+
+    add_tags = tk.Button(win, text="Tag hinzufügen",width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+    add_tags.grid(row=2, column=1, sticky="e", padx=5)
+
+    update = tk.Button(win, text="Index aktualisieren", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+    update.grid(row=3, column=0, sticky="w", padx=5, pady=10)
+
+    b = tk.Button(win, text="Schließen", command=win.destroy, width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+    b.grid(row=3, column=1, sticky="e", padx=5, pady=10)
+
+
 # --------------- UI ---------------
 
 
