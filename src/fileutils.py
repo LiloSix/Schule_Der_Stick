@@ -1,3 +1,4 @@
+import pathlib
 from typing import Union, Optional, List, Tuple, Generator
 from os import path, makedirs, listdir, remove
 import shutil
@@ -33,6 +34,12 @@ class FILE:
     def full_path(self):
         "Gibt den absoluten Pfad der Datei zurück"
         return path.abspath(path.join(DIRIN, self.__repr__()))
+
+    def view_name_ui(self):
+        """Gibt den Dateinamen und den darüber liegenden Ordner zurück"""
+        fullpath = path.abspath(path.join(DIRIN, self.__repr__()))
+        filename = fullpath.split("\\")
+        return f"{filename[-2]}\\{filename[-1]}"
 
     def peek(self, loc: Union[int, Tuple[int, str]], scope: int):
         """
