@@ -1,4 +1,4 @@
-BG_COL = "#D1DEE8"
+BG_COL = "#EBF2F5"
 FONT = "Arial"
 
 FG_LBL_COL = "#0D1F2D"
@@ -13,4 +13,3 @@ FT_LBL_NORM = (FONT, 11, "normal")
 FT_BTN_NORM = (FONT, 10, "normal")
 
 WD_TEXTBOXES = 55
-HT_LISTBOXES = 10

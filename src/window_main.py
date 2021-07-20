@@ -1,4 +1,5 @@
-
+import tkinter as tk
+from constants import *
 from window_tags import *
 import backend as be
 import database as db
@@ -31,7 +32,7 @@ class WindowMain:
                              bg=BG_BTN_COL,
                              command=self.open_popup)
         btn_search = tk.Button(fr_main, text="Suche", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
-                               command=self.result_list)
+                               command=self.testing_list)
         btn_save = tk.Button(fr_main, text="Unterrichtseinheit\nspeichern", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL, command=self.save_selection)
 
@@ -41,8 +42,7 @@ class WindowMain:
 
         fr_choice_results = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=HT_LISTBOXES, relief="flat",
-                                      selectmode="extended")
+        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
         scroll_results = tk.Scrollbar(fr_choice_results)
         self.lbx_results.config(yscrollcommand=scroll_results.set)
         scroll_results.config(command=self.lbx_results.yview)
@@ -60,7 +60,7 @@ class WindowMain:
 
         fr_choice = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=HT_LISTBOXES, relief="flat", selectmode="extended")
+        self.lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
         scroll_choice = tk.Scrollbar(fr_choice, highlightthickness=1, highlightbackground=HL_COL)
         self.lbx_choice.config(yscrollcommand=scroll_choice.set)
         scroll_choice.config(command=self.lbx_choice.yview)
@@ -105,10 +105,6 @@ class WindowMain:
         lbl_do_not_empty.grid(row=0, column=1, sticky="w")
         chk_do_not_empty.grid(row=0, column=0, sticky="e")
 
-        # -----------ATTRIBUTES ------------
-    queries = list()
-    query_choice = list()
-
         # ------------ METHODS -------------
 
     def open_popup(self):
@@ -116,31 +112,32 @@ class WindowMain:
         popup.title("Stichworte bearbeiten")
         window_2 = WindowTags(popup)
 
-    def result_list(self):
+    def testing_list(self):
 
         queries = [i.strip() for i in self.ent_search.get().split(",")]
         results = be.search(queries)
 
         for value in results:
-            self.lbx_results.insert(tk.END, value.view_name_ui())
+            filename = value.full_path().split("\\")
+            self.lbx_results.insert(tk.END, f"{filename[-2]}\\{filename[-1]}")
+            print(filename)
 
-            print(value.id)
+    def get_tags(self):
+
+        test1 = input("tag: ")
+        res = db.tag_hint(test1)
+        print(res)
 
     def results_to_choice(self):
-        #list_result_choices = list()
+        list_result_choices = list()
         selection = self.lbx_results.curselection()
 
         for i in selection:
             entry = self.lbx_results.get(i)
-            print(i)
-            for j in self.queries:
-                print(j)
-                if entry == j.view_name_ui():
-                    self.query_choice.append(j)
+            list_result_choices.append(entry)
 
-        for ii in self.query_choice:
-            self.lbx_choice.insert(tk.END, ii.view_name_ui())
-            print(ii)
+        for j in list_result_choices:
+            self.lbx_choice.insert(tk.END, j)
 
     def remove_from_choice(self):
         val_selection = self.lbx_choice.curselection()
