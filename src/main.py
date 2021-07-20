@@ -1,4 +1,6 @@
 import tkinter as tk
+import backend as be
+import database as db
 
 # ----------- CONSTANTS ------------
 
@@ -16,14 +18,27 @@ FT_LBL_NORM = (FONT, 11, "normal")
 
 FT_BTN_NORM = (FONT, 10, "normal")
 
-WD_TEXTBOXES = 35
+WD_TEXTBOXES = 55
 
 # ------------ METHODS -------------
 
 
 def testing_list():
-    for values in range(20):
-        lbx_results.insert(tk.END, f"val: {values}")
+
+    queries = [i.strip() for i in ent_search.get().split(",")]
+
+    results = be.search(queries)
+    for value in results:
+        filename = value.full_path().split("\\")
+        lbx_results.insert(tk.END, f"{filename[-2]}\\{filename[-1]}")
+        print(filename)
+
+
+def get_tags():
+
+    test1 = input("tag: ")
+    res = db.tag_hint(test1)
+    print(res)
 
 
 def results_to_choice():
@@ -67,6 +82,7 @@ def is_checked():
 
 # -------------Pop-Up---------------
 def popup_bonus():
+
     win = tk.Toplevel()
     win.minsize(200, 150)
     win.wm_title("Stichworte/Tags bearbeiten")
@@ -96,7 +112,6 @@ def popup_bonus():
 
 # --------------- UI ---------------
 
-
 window = tk.Tk()
 window.title("Der Schtick")
 window.config(bg="#EBF2F5")
@@ -111,6 +126,7 @@ fr_main.grid(column=1, row=1, sticky="news")
 
 fr_main.columnconfigure([0, 1, 2, 3, 4, 5], minsize=10)
 fr_main.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=10)
+
 
 # ------------ Mainframe Widgets ------------
 

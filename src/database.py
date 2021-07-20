@@ -29,11 +29,10 @@ def tag_remove(tag) -> bool:
         return False
 
 
-
 def tag_hint(tag: str) -> List[str]:
     "Autovervollständigung für Tags"
     try:
-        return list(CUR.execute("SELECT Tag FROM Tags WHERE Tag LIKE ?", (f"%{tag}%", )))
+        return list([x[0] for x in CUR.execute("SELECT Tag FROM Tags WHERE Tag LIKE ?", (f"%{tag}%", ))])
     except sqlite3.Error as err:
         print(f"SQL tag_hint Error\nERR: {err}")
         return []
