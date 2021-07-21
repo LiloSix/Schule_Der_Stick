@@ -1,5 +1,4 @@
-import tkinter as tk
-from constants import *
+from typing import List, Tuple, Union, Optional
 from window_tags import *
 import backend as be
 import database as db
@@ -21,6 +20,9 @@ class WindowMain:
         fr_main.columnconfigure([0, 1, 2, 3, 4, 5], minsize=10)
         fr_main.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=10)
 
+        self.file_list = list()
+        self.choice_list = list()
+
         # ------------ Mainframe Widgets ------------
 
         lbl_title = tk.Label(fr_main, text="Der Schtick", font=FT_LBL_TITLE, fg=FG_LBL_COL, bg=BG_COL)
@@ -32,7 +34,7 @@ class WindowMain:
                              bg=BG_BTN_COL,
                              command=self.open_popup)
         btn_search = tk.Button(fr_main, text="Suche", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
-                               command=self.testing_list)
+                               command=self.result_list)
         btn_save = tk.Button(fr_main, text="Unterrichtseinheit\nspeichern", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL, command=self.save_selection)
 
@@ -112,53 +114,61 @@ class WindowMain:
         popup.title("Stichworte bearbeiten")
         window_2 = WindowTags(popup)
 
-    def testing_list(self):
+    def result_list(self):
 
         queries = [i.strip() for i in self.ent_search.get().split(",")]
-        results = be.search(queries)
+        self.file_list = be.search(queries)
 
-        for value in results:
-            filename = value.full_path().split("\\")
-            self.lbx_results.insert(tk.END, f"{filename[-2]}\\{filename[-1]}")
-            print(filename)
-
-    def get_tags(self):
-
-        test1 = input("tag: ")
-        res = db.tag_hint(test1)
-        print(res)
+        for value in self.file_list:
+            filename = value.view_name_ui()
+            self.lbx_results.insert(tk.END, filename)
+            print(filename, value.id)
 
     def results_to_choice(self):
-        list_result_choices = list()
-        selection = self.lbx_results.curselection()
+        res_selection = self.lbx_results.curselection()
 
-        for i in selection:
-            entry = self.lbx_results.get(i)
-            list_result_choices.append(entry)
+        for i in res_selection:
+            if i not in self.choice_list:
+                self.choice_list.append(self.file_list[i])
 
-        for j in list_result_choices:
-            self.lbx_choice.insert(tk.END, j)
+        self.lbx_choice.delete(0, tk.END)
+        print(f"chosen: {self.choice_list}")
+
+        for j in self.choice_list:
+            self.lbx_choice.insert(tk.END, f"{j.id}: {j.view_name_ui()}")
 
     def remove_from_choice(self):
-        val_selection = self.lbx_choice.curselection()
+        cho_selection = list(self.lbx_choice.curselection())
+        cho_selection.reverse()
 
-        print(val_selection)
+        while len(cho_selection) > 0:
+            self.lbx_choice.delete(cho_selection[0])
+            self.choice_list.pop(cho_selection[0])
+            cho_selection = list(self.lbx_choice.curselection())
 
-        while len(val_selection) > 0:
-            self.lbx_choice.delete(val_selection[0])
-            val_selection = self.lbx_choice.curselection()
+        for i in self.choice_list:
+            print(type(i), i.id)
 
     def save_selection(self):
-        values = self.lbx_choice.get(0, tk.END)
+        temp_choice = self.lbx_choice.get(0, tk.END)
+        id_list = list()
+
+        for value in temp_choice:
+            split_val = [x for x in value.split(":")]
+            id_list.append(int(split_val[0]))
+
         chkbx = self.is_checked()
+
         self.lbx_results.delete(0, tk.END)
         self.lbx_choice.delete(0, tk.END)
         self.check_delete.set(0)
 
-        print(f"Values ={values}, Checked: {chkbx}")
+        print(f"{id_list}, {chkbx}")
+
+        return id_list, chkbx
 
     def is_checked(self):
         if self.check_delete.get() == 1:
-            return "true"
+            return True
         else:
-            return "false"
+            return False
