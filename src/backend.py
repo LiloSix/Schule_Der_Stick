@@ -3,6 +3,7 @@ import database
 import extractor
 from typing import List, Tuple
 
+
 def __tags_init__() -> bool:
     "Fügt alle Tags aus ../Suchbegriffe.txt zur Datenbank hinzu"
     try:
@@ -63,6 +64,7 @@ def get_documents(fid: List[int], rm: bool) -> bool:
     if rm:
         clear()
     return all([copy(f[0]) for f in database.files_get_select(fid)])
+
 
 def tags_check(f: FILE, tags: List[Tuple[int, str, int]]) -> List[Tuple[int, str, int]]:
     tags_match: List[Tuple[int, str, int]] = []

@@ -17,8 +17,8 @@ class WindowTags:
         header = tk.Label(master, text="Stichwort/Tags bearbeiten", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
         header.grid(row=1, column=1, columnspan=2, sticky="w")
 
-        input1 = tk.Entry(master, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
-        input1.grid(row=2, column=1, columnspan=2, sticky="we", pady=5, padx=5)
+        self.input1 = tk.Entry(master, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
+        self.input1.grid(row=2, column=1, columnspan=2, sticky="we", pady=5, padx=5)
 
         remove = tk.Button(master, text="entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
         remove.grid(row=3, column=1, sticky="wn", padx=5)

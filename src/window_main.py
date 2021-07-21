@@ -1,5 +1,4 @@
-import tkinter as tk
-from constants import *
+from typing import List, Tuple, Union, Optional
 from window_tags import *
 import backend as be
 import database as db
@@ -129,34 +128,47 @@ class WindowMain:
         res_selection = self.lbx_results.curselection()
 
         for i in res_selection:
-            self.choice_list.append(self.file_list[i])
+            if i not in self.choice_list:
+                self.choice_list.append(self.file_list[i])
 
-        print(self.choice_list)
+        self.lbx_choice.delete(0, tk.END)
+        print(f"chosen: {self.choice_list}")
 
         for j in self.choice_list:
             self.lbx_choice.insert(tk.END, f"{j.id}: {j.view_name_ui()}")
 
     def remove_from_choice(self):
-        cho_selection = self.lbx_choice.curselection()
+        cho_selection = list(self.lbx_choice.curselection())
+        cho_selection.reverse()
 
         while len(cho_selection) > 0:
             self.lbx_choice.delete(cho_selection[0])
-            cho_selection = self.lbx_choice.curselection()
+            self.choice_list.pop(cho_selection[0])
+            cho_selection = list(self.lbx_choice.curselection())
 
         for i in self.choice_list:
             print(type(i), i.id)
 
     def save_selection(self):
-        values = self.lbx_choice.get(0, tk.END)
+        temp_choice = self.lbx_choice.get(0, tk.END)
+        id_list = list()
+
+        for value in temp_choice:
+            split_val = [x for x in value.split(":")]
+            id_list.append(int(split_val[0]))
+
         chkbx = self.is_checked()
+
         self.lbx_results.delete(0, tk.END)
         self.lbx_choice.delete(0, tk.END)
         self.check_delete.set(0)
 
-        print(f"Values ={values}, Checked: {chkbx}")
+        print(f"{id_list}, {chkbx}")
+
+        return id_list, chkbx
 
     def is_checked(self):
         if self.check_delete.get() == 1:
-            return "true"
+            return True
         else:
-            return "false"
+            return False
