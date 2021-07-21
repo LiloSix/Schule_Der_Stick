@@ -1,3 +1,4 @@
+import tkinter
 from typing import List, Tuple, Union, Optional
 from window_tags import *
 import backend as be
@@ -29,6 +30,7 @@ class WindowMain:
         lbl_descr = tk.Label(fr_main, text="Unterrichtsvorbereitung", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
         lbl_search = tk.Label(fr_main, text="Suche", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
         lbl_results = tk.Label(fr_main, text="Ergebnisse", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
+        self.lbl_results_monitor = tk.Label(fr_main, text="Placeholder", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
 
         btn_tags = tk.Button(fr_main, text="Stichworte\nbearbeiten", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL,
@@ -39,30 +41,33 @@ class WindowMain:
                              bg=BG_BTN_COL, command=self.save_selection)
 
         self.ent_search = tk.Entry(fr_main, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
+        self.ent_search.bind('<Return>', self.handler)
 
         # -------------Frame Results -----------
 
         fr_choice_results = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
+        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=HT_TEXTBOXES, relief="flat", selectmode="extended")
         scroll_results = tk.Scrollbar(fr_choice_results)
         self.lbx_results.config(yscrollcommand=scroll_results.set)
         scroll_results.config(command=self.lbx_results.yview)
 
         # ----------Frame Choice Buttons ----------
 
-        fr_choice_btns = tk.Frame(fr_main, bg=BG_COL)
+        fr_choice_btns = tk.Frame(fr_main, height=HT_TEXTBOXES, bg=BG_COL)
 
         btn_add_files = tk.Button(fr_choice_btns, text="Hinzufügen ->", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL,
                                   bg=BG_BTN_COL, command=self.results_to_choice)
         btn_remove_files = tk.Button(fr_choice_btns, text="<- Entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL,
                                      bg=BG_BTN_COL, command=self.remove_from_choice)
+        btn_empty_results = tk.Button(fr_choice_btns, text="<- Ergebnisse\nleeren", width=10, font=FT_BTN_NORM,
+                                      fg=FG_BTN_COL, bg=BG_BTN_COL, command=self.empty_results)
 
         # --------------Frame Choice -------------
 
         fr_choice = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
+        self.lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=HT_TEXTBOXES, relief="flat", selectmode="extended")
         scroll_choice = tk.Scrollbar(fr_choice, highlightthickness=1, highlightbackground=HL_COL)
         self.lbx_choice.config(yscrollcommand=scroll_choice.set)
         scroll_choice.config(command=self.lbx_choice.yview)
@@ -84,6 +89,7 @@ class WindowMain:
         lbl_descr.grid(row=2, column=1, columnspan=3, sticky="w")
         lbl_search.grid(row=3, column=1, sticky="nw")
         lbl_results.grid(row=4, column=1, sticky="nw")
+        self.lbl_results_monitor.grid(row=5, column=2, rowspan=2, sticky="wn", pady=(5, 0))
 
         self.ent_search.grid(row=3, column=2, sticky="ew")
 
@@ -95,9 +101,10 @@ class WindowMain:
         self.lbx_results.grid(row=0, column=0, sticky="news")
         scroll_results.grid(row=0, column=1, sticky="nes")
 
-        fr_choice_btns.grid(row=4, column=3, sticky="n", padx=5, pady=5)
-        btn_add_files.grid(row=0, column=0)
-        btn_remove_files.grid(row=1, column=0)
+        fr_choice_btns.grid(row=4, column=3, sticky="ns", padx=5)
+        btn_add_files.pack(side=tk.TOP)
+        btn_remove_files.pack(side=tk.TOP)
+        btn_empty_results.pack(side=tk.BOTTOM)
 
         fr_choice.grid(row=4, column=4, sticky="n")
         self.lbx_choice.grid(row=0, column=0, sticky="news")
@@ -122,7 +129,14 @@ class WindowMain:
         for value in self.file_list:
             filename = value.view_name_ui()
             self.lbx_results.insert(tk.END, filename)
-            print(filename, value.id)
+
+        self.update_result_monitor(queries[0], len(self.file_list))
+
+    def update_result_monitor(self, search_entry, result_amt):
+        self.lbl_results_monitor.config(text=f"Ihre Suche nach '{search_entry} ' brachte {result_amt} Ergebnisse")
+
+    def handler(self, e):
+        self.result_list()
 
     def results_to_choice(self):
         res_selection = self.lbx_results.curselection()
@@ -148,6 +162,9 @@ class WindowMain:
 
         for i in self.choice_list:
             print(type(i), i.id)
+
+    def empty_results(self):
+        self.lbx_results.delete(0, tk.END)
 
     def save_selection(self):
         temp_choice = self.lbx_choice.get(0, tk.END)
