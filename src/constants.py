@@ -13,3 +13,4 @@ FT_LBL_NORM = (FONT, 11, "normal")
 FT_BTN_NORM = (FONT, 10, "normal")
 
 WD_TEXTBOXES = 55
+HT_TEXTBOXES = 12

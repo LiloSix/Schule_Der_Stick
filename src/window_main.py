@@ -1,3 +1,4 @@
+import tkinter
 from typing import List, Tuple, Union, Optional
 from window_tags import *
 import backend as be
@@ -44,25 +45,27 @@ class WindowMain:
 
         fr_choice_results = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
+        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=HT_TEXTBOXES, relief="flat", selectmode="extended")
         scroll_results = tk.Scrollbar(fr_choice_results)
         self.lbx_results.config(yscrollcommand=scroll_results.set)
         scroll_results.config(command=self.lbx_results.yview)
 
         # ----------Frame Choice Buttons ----------
 
-        fr_choice_btns = tk.Frame(fr_main, bg=BG_COL)
+        fr_choice_btns = tk.Frame(fr_main, height=HT_TEXTBOXES, bg=BG_COL)
 
         btn_add_files = tk.Button(fr_choice_btns, text="Hinzufügen ->", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL,
                                   bg=BG_BTN_COL, command=self.results_to_choice)
         btn_remove_files = tk.Button(fr_choice_btns, text="<- Entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL,
                                      bg=BG_BTN_COL, command=self.remove_from_choice)
+        btn_empty_results = tk.Button(fr_choice_btns, text="<- Ergebnisse\nleeren", width=10, font=FT_BTN_NORM,
+                                      fg=FG_BTN_COL, bg=BG_BTN_COL, command=self.empty_results)
 
         # --------------Frame Choice -------------
 
         fr_choice = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=8, relief="flat", selectmode="extended")
+        self.lbx_choice = tk.Listbox(fr_choice, width=WD_TEXTBOXES, height=HT_TEXTBOXES, relief="flat", selectmode="extended")
         scroll_choice = tk.Scrollbar(fr_choice, highlightthickness=1, highlightbackground=HL_COL)
         self.lbx_choice.config(yscrollcommand=scroll_choice.set)
         scroll_choice.config(command=self.lbx_choice.yview)
@@ -95,9 +98,10 @@ class WindowMain:
         self.lbx_results.grid(row=0, column=0, sticky="news")
         scroll_results.grid(row=0, column=1, sticky="nes")
 
-        fr_choice_btns.grid(row=4, column=3, sticky="n", padx=5, pady=5)
-        btn_add_files.grid(row=0, column=0)
-        btn_remove_files.grid(row=1, column=0)
+        fr_choice_btns.grid(row=4, column=3, sticky="ns", padx=5)
+        btn_add_files.pack(side=tk.TOP)
+        btn_remove_files.pack(side=tk.TOP)
+        btn_empty_results.pack(side=tk.BOTTOM)
 
         fr_choice.grid(row=4, column=4, sticky="n")
         self.lbx_choice.grid(row=0, column=0, sticky="news")
@@ -148,6 +152,9 @@ class WindowMain:
 
         for i in self.choice_list:
             print(type(i), i.id)
+
+    def empty_results(self):
+        self.lbx_results.delete(0, tk.END)
 
     def save_selection(self):
         temp_choice = self.lbx_choice.get(0, tk.END)
