@@ -30,6 +30,7 @@ class WindowMain:
         lbl_descr = tk.Label(fr_main, text="Unterrichtsvorbereitung", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
         lbl_search = tk.Label(fr_main, text="Suche", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
         lbl_results = tk.Label(fr_main, text="Ergebnisse", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
+        self.lbl_results_monitor = tk.Label(fr_main, text="Placeholder", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
 
         btn_tags = tk.Button(fr_main, text="Stichworte\nbearbeiten", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL,
@@ -40,6 +41,7 @@ class WindowMain:
                              bg=BG_BTN_COL, command=self.save_selection)
 
         self.ent_search = tk.Entry(fr_main, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
+        self.ent_search.bind('<Return>', self.handler)
 
         # -------------Frame Results -----------
 
@@ -87,6 +89,7 @@ class WindowMain:
         lbl_descr.grid(row=2, column=1, columnspan=3, sticky="w")
         lbl_search.grid(row=3, column=1, sticky="nw")
         lbl_results.grid(row=4, column=1, sticky="nw")
+        self.lbl_results_monitor.grid(row=5, column=2, rowspan=2, sticky="wn", pady=(5, 0))
 
         self.ent_search.grid(row=3, column=2, sticky="ew")
 
@@ -126,7 +129,14 @@ class WindowMain:
         for value in self.file_list:
             filename = value.view_name_ui()
             self.lbx_results.insert(tk.END, filename)
-            print(filename, value.id)
+
+        self.update_result_monitor(queries[0], len(self.file_list))
+
+    def update_result_monitor(self, search_entry, result_amt):
+        self.lbl_results_monitor.config(text=f"Ihre Suche nach '{search_entry} ' brachte {result_amt} Ergebnisse")
+
+    def handler(self, e):
+        self.result_list()
 
     def results_to_choice(self):
         res_selection = self.lbx_results.curselection()
