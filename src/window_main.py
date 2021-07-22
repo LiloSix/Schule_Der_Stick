@@ -1,6 +1,7 @@
 import tkinter
 from typing import List, Tuple, Union, Optional
 from window_tags import *
+from autocomplete_combo import *
 import backend as be
 import database as db
 
@@ -40,8 +41,12 @@ class WindowMain:
         btn_save = tk.Button(fr_main, text="Unterrichtseinheit\nspeichern", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL, command=self.save_selection)
 
-        self.ent_search = tk.Entry(fr_main, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
-        self.ent_search.bind('<Return>', self.handler)
+        self.search_combo = AutocompleteCombobox(fr_main)
+        #self.search_combo.config()
+        self.search_combo.bind('<Return>', self.handler)
+        #self.ent_search = tk.Entry(fr_main, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
+        #self.ent_search.bind('<Return>', self.handler)
+
 
         # -------------Frame Results -----------
 
@@ -91,7 +96,8 @@ class WindowMain:
         lbl_results.grid(row=4, column=1, sticky="nw")
         self.lbl_results_monitor.grid(row=5, column=2, rowspan=2, sticky="wn", pady=(5, 0))
 
-        self.ent_search.grid(row=3, column=2, sticky="ew")
+        #self.ent_search.grid(row=3, column=2, sticky="ew")
+        self.search_combo.grid(row=3, column=2, sticky="ew")
 
         btn_tags.grid(row=1, column=4, sticky="e")
         btn_search.grid(row=3, column=3, pady=5)
@@ -119,11 +125,11 @@ class WindowMain:
     def open_popup(self):
         popup = tk.Tk()
         popup.title("Stichworte bearbeiten")
-        window_2 = WindowTags(popup)
+        WindowTags(popup)
 
     def result_list(self):
 
-        queries = [i.strip() for i in self.ent_search.get().split(",")]
+        queries = [i.strip() for i in self.search_combo.get().split(",")]
         self.file_list = be.search(queries)
 
         for value in self.file_list:

@@ -53,7 +53,7 @@ class AutocompleteEntry(tk.Entry):
                         self._hit_index = (self._hit_index + delta) % len(self._hits)
                 # now finally perform the auto completion
                 if self._hits:
-                        self.delete(0,Tkinter.END)
+                        self.delete(0,tk.END)
                         self.insert(0,self._hits[self._hit_index])
                         self.select_range(self.position,tk.END)
 
@@ -80,7 +80,8 @@ class AutocompleteEntry(tk.Entry):
 class AutocompleteCombobox(ttk.Combobox):
 
         def __init__(self, master):
-            self.master = master
+                ttk.Combobox.__init__(self, master)
+                self.master = master
 
         def set_completion_list(self, completion_list):
                 """Use our completion list as our drop down selection menu, arrows move through menu."""
@@ -142,13 +143,15 @@ def test(test_list):
         entry.focus_set()
         combo = AutocompleteCombobox(root)
         combo.set_completion_list(test_list)
-        combo.pack()
+        #combo.pack()
         combo.focus_set()
         # I used a tiling WM with no controls, added a shortcut to quit
         root.bind('<Control-Q>', lambda event=None: root.destroy())
         root.bind('<Control-q>', lambda event=None: root.destroy())
+        print(type(combo))
+        print(type(entry))
         root.mainloop()
 
 
-test_list = ('apple', 'banana', 'CranBerry', 'dogwood', 'alpha', 'Acorn', 'Anise' )
+test_list = ('apple', 'banana', 'CranBerry', 'dogwood', 'alpha', 'Acorn', 'Anise', 'Leinöl')
 test(test_list)
