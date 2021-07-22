@@ -1,6 +1,7 @@
 import tkinter
 from typing import List, Tuple, Union, Optional
 from window_tags import *
+from autocomplete_combo import *
 import backend as be
 import database as db
 
@@ -30,7 +31,8 @@ class WindowMain:
         lbl_descr = tk.Label(fr_main, text="Unterrichtsvorbereitung", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
         lbl_search = tk.Label(fr_main, text="Suche", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
         lbl_results = tk.Label(fr_main, text="Ergebnisse", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
-        self.lbl_results_monitor = tk.Label(fr_main, text="Placeholder", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
+        self.lbl_results_monitor = tk.Label(fr_main, text="Placeholder", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL,
+                                            justify="left")
 
         btn_tags = tk.Button(fr_main, text="Stichworte\nbearbeiten", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL,
@@ -40,14 +42,16 @@ class WindowMain:
         btn_save = tk.Button(fr_main, text="Unterrichtseinheit\nspeichern", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
                              bg=BG_BTN_COL, command=self.save_selection)
 
-        self.ent_search = tk.Entry(fr_main, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
-        self.ent_search.bind('<Return>', self.handler)
+        self.search_combo = AutocompleteCombobox(fr_main)
+        self.search_combo.config(width=WD_TEXTBOXES)
+        self.search_combo.bind('<Return>', self.handler)
 
         # -------------Frame Results -----------
 
         fr_choice_results = tk.Frame(fr_main, bg=BG_COL, highlightthickness=1, highlightbackground=HL_COL)
 
-        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=HT_TEXTBOXES, relief="flat", selectmode="extended")
+        self.lbx_results = tk.Listbox(fr_choice_results, width=WD_TEXTBOXES, height=HT_TEXTBOXES, relief="flat",
+                                      selectmode="extended")
         scroll_results = tk.Scrollbar(fr_choice_results)
         self.lbx_results.config(yscrollcommand=scroll_results.set)
         scroll_results.config(command=self.lbx_results.yview)
@@ -89,15 +93,15 @@ class WindowMain:
         lbl_descr.grid(row=2, column=1, columnspan=3, sticky="w")
         lbl_search.grid(row=3, column=1, sticky="nw")
         lbl_results.grid(row=4, column=1, sticky="nw")
-        self.lbl_results_monitor.grid(row=5, column=2, rowspan=2, sticky="wn", pady=(5, 0))
+        self.lbl_results_monitor.grid(row=5, column=2, rowspan=2, columnspan=2, sticky="wn", pady=(5, 0))
 
-        self.ent_search.grid(row=3, column=2, sticky="ew")
+        self.search_combo.grid(row=3, column=2, sticky="w")
 
         btn_tags.grid(row=1, column=4, sticky="e")
         btn_search.grid(row=3, column=3, pady=5)
         btn_save.grid(row=6, column=4, sticky="e")
 
-        fr_choice_results.grid(row=4, column=2, sticky="n")
+        fr_choice_results.grid(row=4, column=2, sticky="nw")
         self.lbx_results.grid(row=0, column=0, sticky="news")
         scroll_results.grid(row=0, column=1, sticky="nes")
 
@@ -106,7 +110,7 @@ class WindowMain:
         btn_remove_files.pack(side=tk.TOP)
         btn_empty_results.pack(side=tk.BOTTOM)
 
-        fr_choice.grid(row=4, column=4, sticky="n")
+        fr_choice.grid(row=4, column=4, sticky="nw")
         self.lbx_choice.grid(row=0, column=0, sticky="news")
         scroll_choice.grid(row=0, column=1, sticky="nes")
 
@@ -119,21 +123,23 @@ class WindowMain:
     def open_popup(self):
         popup = tk.Tk()
         popup.title("Stichworte bearbeiten")
-        window_2 = WindowTags(popup)
+        WindowTags(popup)
 
     def result_list(self):
 
-        queries = [i.strip() for i in self.ent_search.get().split(",")]
+        queries = [i.strip() for i in self.search_combo.get().split(",")]
         self.file_list = be.search(queries)
+        counter = 1
 
         for value in self.file_list:
-            filename = value.view_name_ui()
+            filename = f"{counter}: {value.view_name_ui()}"
+            counter += 1
             self.lbx_results.insert(tk.END, filename)
 
-        self.update_result_monitor(queries[0], len(self.file_list))
+        self.update_result_monitor(self.search_combo.get(), len(self.file_list))
 
     def update_result_monitor(self, search_entry, result_amt):
-        self.lbl_results_monitor.config(text=f"Ihre Suche nach '{search_entry} ' brachte {result_amt} Ergebnisse")
+        self.lbl_results_monitor.config(text=f"Ihre Suche nach '{search_entry} '\nbrachte {result_amt} Ergebnisse")
 
     def handler(self, e):
         self.result_list()
@@ -146,7 +152,6 @@ class WindowMain:
                 self.choice_list.append(self.file_list[i])
 
         self.lbx_choice.delete(0, tk.END)
-        print(f"chosen: {self.choice_list}")
 
         for j in self.choice_list:
             self.lbx_choice.insert(tk.END, f"{j.id}: {j.view_name_ui()}")
@@ -159,9 +164,6 @@ class WindowMain:
             self.lbx_choice.delete(cho_selection[0])
             self.choice_list.pop(cho_selection[0])
             cho_selection = list(self.lbx_choice.curselection())
-
-        for i in self.choice_list:
-            print(type(i), i.id)
 
     def empty_results(self):
         self.lbx_results.delete(0, tk.END)
@@ -179,6 +181,8 @@ class WindowMain:
         self.lbx_results.delete(0, tk.END)
         self.lbx_choice.delete(0, tk.END)
         self.check_delete.set(0)
+        self.search_combo.delete(0, tk.END)
+        self.lbl_results_monitor.config(text="")
 
         print(f"{id_list}, {chkbx}")
 
