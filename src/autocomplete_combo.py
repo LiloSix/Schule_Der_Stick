@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import constants as co
 
 
 class AutocompleteCombobox(ttk.Combobox):
