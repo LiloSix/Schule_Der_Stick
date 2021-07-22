@@ -1,6 +1,6 @@
-import tkinter as tk
+from window_main import *
 from constants import *
-import backend as be
+import tkinter as tk
 import database as db
 
 
@@ -20,22 +20,35 @@ class WindowTags:
         self.input1 = tk.Entry(master, highlightthickness=1, highlightbackground=HL_COL, relief="flat")
         self.input1.grid(row=2, column=1, columnspan=2, sticky="we", pady=5, padx=5)
 
-        remove = tk.Button(master, text="entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+        remove = tk.Button(master, text="entfernen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
+                           command=self.remove_tag)
         remove.grid(row=3, column=1, sticky="wn", padx=5)
 
         add_tags = tk.Button(master, text="Tag hinzufügen", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
-                             command=self.get_tags)
+                             command=self.add_tag)
         add_tags.grid(row=3, column=2, sticky="en", padx=5)
 
-        update = tk.Button(master, text="Index\naktualisieren", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL)
+        update = tk.Button(master, text="Index\naktualisieren", width=10, font=FT_BTN_NORM, fg=FG_BTN_COL, bg=BG_BTN_COL,
+                           command=self.get_updated)
         update.grid(row=4, column=1, sticky="ws", padx=5)
 
         b = tk.Button(master, text="Schließen", command=self.master.destroy, width=10, font=FT_BTN_NORM, fg=FG_BTN_COL,
                       bg=BG_BTN_COL)
         b.grid(row=4, column=2, sticky="es", padx=5)
 
-    def get_tags(self):
+    def get_updated(self):
+        be.update(True)
+        test = db.tag_hint("")
+        for i in test:
+            print(i)
 
-        test1 = self.input1.get()
-        res = db.tag_hint(test1)
-        print(res)
+    def add_tag(self):
+        tag = self.input1.get()
+        db.tag_add(tag)
+        self.input1.delete(0, tk.END)
+
+    def remove_tag(self):
+        tag = self.input1.get()
+        db.tag_remove(tag)
+        self.input1.delete(0, tk.END)
+

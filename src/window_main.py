@@ -1,9 +1,8 @@
-import tkinter
-from typing import List, Tuple, Union, Optional
 from window_tags import *
 from autocomplete_combo import *
 import backend as be
 import database as db
+from constants import *
 
 
 class WindowMain:
@@ -11,6 +10,7 @@ class WindowMain:
         self.master = master
         self.master.config(bg="#EBF2F5")
         self.master.iconbitmap("images/search-16.ico")
+        self.completion_list = db.tag_hint("")
 
         master.columnconfigure([0, 1, 2], minsize=10, weight=1)
         master.rowconfigure([0, 1, 2], minsize=10, weight=1)
@@ -43,8 +43,11 @@ class WindowMain:
                              bg=BG_BTN_COL, command=self.save_selection)
 
         self.search_combo = AutocompleteCombobox(fr_main)
-        self.search_combo.config(width=WD_TEXTBOXES)
+        self.search_combo.set_completion_list(self.completion_list)
+
+        self.search_combo.config(width=WD_TEXTBOXES, postcommand=self.combobox_update)
         self.search_combo.bind('<Return>', self.handler)
+        self.search_combo.bind('<<ComboboxSelected>>', )
 
         # -------------Frame Results -----------
 
@@ -143,6 +146,10 @@ class WindowMain:
 
     def handler(self, e):
         self.result_list()
+
+    def combobox_update(self):
+        updted_list = db.tag_hint("")
+        self.search_combo['values'] = updted_list
 
     def results_to_choice(self):
         res_selection = self.lbx_results.curselection()
