@@ -1,3 +1,5 @@
+import database as db
+
 BG_COL = "#EBF2F5"
 FONT = "Arial"
 
@@ -14,3 +16,7 @@ FT_BTN_NORM = (FONT, 10, "normal")
 
 WD_TEXTBOXES = 55
 HT_TEXTBOXES = 12
+
+# ---- GLOBALS -------
+
+

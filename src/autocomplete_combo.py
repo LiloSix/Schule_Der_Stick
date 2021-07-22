@@ -1,3 +1,14 @@
+"""
+tkentrycomplete.py
+
+A Tkinter widget that features autocompletion.
+
+Created by Mitja Martini on 2008-11-29.
+Updated by Russell Adams, 2011/01/24 to support Python 3 and Combobox.
+Updated by Dominic Kexel to use Tkinter and ttk instead of tkinter and tkinter.ttk
+   Licensed same as original (not specified?), or public domain, whichever is less restrictive.
+"""
+
 import tkinter as tk
 from tkinter import ttk
 import constants as co
