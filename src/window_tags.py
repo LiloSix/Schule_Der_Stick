@@ -2,6 +2,7 @@ from window_main import *
 from constants import *
 import tkinter as tk
 import database as db
+import backend as be
 
 
 class WindowTags:

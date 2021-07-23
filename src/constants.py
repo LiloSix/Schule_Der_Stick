@@ -1,5 +1,6 @@
 import database as db
 
+#BG_COL = "#08114a"
 BG_COL = "#EBF2F5"
 FONT = "Arial"
 

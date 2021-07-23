@@ -1,3 +1,5 @@
+import tkinter.messagebox
+
 from window_tags import *
 from autocomplete_combo import *
 import backend as be
@@ -8,7 +10,7 @@ from constants import *
 class WindowMain:
     def __init__(self, master):
         self.master = master
-        self.master.config(bg="#EBF2F5")
+        self.master.config(bg=BG_COL)
         self.master.iconbitmap("images/search-16.ico")
         self.completion_list = db.tag_hint("")
 
@@ -31,7 +33,9 @@ class WindowMain:
         lbl_descr = tk.Label(fr_main, text="Unterrichtsvorbereitung", font=FT_LBL_DESCR, fg=FG_LBL_COL, bg=BG_COL)
         lbl_search = tk.Label(fr_main, text="Suche", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
         lbl_results = tk.Label(fr_main, text="Ergebnisse", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL)
-        self.lbl_results_monitor = tk.Label(fr_main, text="Placeholder", font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL,
+        self.lbl_results_monitor = tk.Label(fr_main, text="Bitte geben Sie ein Stichwort im Suchfeld ein."
+                                                          "\nOder mehrere Stichworte mit Komma getrennt.",
+                                            font=FT_LBL_NORM, fg=FG_LBL_COL, bg=BG_COL,
                                             justify="left")
 
         btn_tags = tk.Button(fr_main, text="Stichworte\nbearbeiten", width=15, font=FT_BTN_NORM, fg=FG_BTN_COL,
@@ -84,7 +88,7 @@ class WindowMain:
         fr_do_not_empty = tk.Frame(fr_main, bg=BG_COL)
         self.check_delete = tk.IntVar()
 
-        lbl_do_not_empty = tk.Label(fr_do_not_empty, text="Ordner vorher nicht leeren", font=FT_LBL_NORM, fg=FG_LBL_COL,
+        lbl_do_not_empty = tk.Label(fr_do_not_empty, text="Ordner vorher leeren", font=FT_LBL_NORM, fg=FG_LBL_COL,
                                     bg=BG_COL)
         chk_do_not_empty = tk.Checkbutton(fr_do_not_empty, variable=self.check_delete, bg=BG_COL, highlightthickness=1,
                                           highlightbackground=HL_COL,
@@ -129,7 +133,7 @@ class WindowMain:
         WindowTags(popup)
 
     def result_list(self):
-
+        self.lbx_results.delete(0, tk.END)
         queries = [i.strip() for i in self.search_combo.get().split(",")]
         self.file_list = be.search(queries)
         counter = 1
@@ -189,7 +193,8 @@ class WindowMain:
         self.lbx_choice.delete(0, tk.END)
         self.check_delete.set(0)
         self.search_combo.delete(0, tk.END)
-        self.lbl_results_monitor.config(text="")
+        self.lbl_results_monitor.config(text="Bitte geben Sie ein Stichwort im Suchfeld ein."
+                                             "\nOder mehrere Stichworte mit Komma getrennt.")
 
         print(f"{id_list}, {chkbx}")
 
@@ -197,6 +202,6 @@ class WindowMain:
 
     def is_checked(self):
         if self.check_delete.get() == 1:
-            return True
-        else:
             return False
+        else:
+            return True
