@@ -105,5 +105,5 @@ def copy(src) -> bool:
         shutil.copy(path.join(DIRIN, src), DIROUT)
         return True
     except OSError as err:
-        print("Error while copying {src} to {DIROUT}\nERR: {err}")
+        print(f"Error while copying {src} to {DIROUT}\nERR: {err}")
         return False
