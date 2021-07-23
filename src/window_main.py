@@ -1,9 +1,7 @@
-import tkinter.messagebox
-
 from window_tags import *
 from autocomplete_combo import *
 import backend as be
-import database as db
+import fileutils as fi
 from constants import *
 
 
@@ -164,8 +162,8 @@ class WindowMain:
 
         self.lbx_choice.delete(0, tk.END)
 
-        for j in self.choice_list:
-            self.lbx_choice.insert(tk.END, f"{j.id}: {j.view_name_ui()}")
+        for obj in self.choice_list:
+            self.lbx_choice.insert(tk.END, f"{obj.id}: {obj.view_name_ui()}")
 
     def remove_from_choice(self):
         cho_selection = list(self.lbx_choice.curselection())
@@ -180,12 +178,11 @@ class WindowMain:
         self.lbx_results.delete(0, tk.END)
 
     def save_selection(self):
-        temp_choice = self.lbx_choice.get(0, tk.END)
+
         id_list = list()
 
-        for value in temp_choice:
-            split_val = [x for x in value.split(":")]
-            id_list.append(int(split_val[0]))
+        for obj in self.choice_list:
+            id_list.append(obj.id)
 
         chkbx = self.is_checked()
 
@@ -196,12 +193,12 @@ class WindowMain:
         self.lbl_results_monitor.config(text="Bitte geben Sie ein Stichwort im Suchfeld ein."
                                              "\nOder mehrere Stichworte mit Komma getrennt.")
 
-        print(f"{id_list}, {chkbx}")
-
-        return id_list, chkbx
+        self.choice_list.clear()
+        print(id_list, chkbx)
+        be.get_documents(id_list, chkbx)
 
     def is_checked(self):
         if self.check_delete.get() == 1:
-            return False
-        else:
             return True
+        else:
+            return False
