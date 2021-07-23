@@ -38,8 +38,8 @@ class FILE:
     def view_name_ui(self):
         """Gibt den Dateinamen und den darüber liegenden Ordner zurück"""
         fullpath = path.abspath(path.join(DIRIN, self.__repr__()))
-        filename = fullpath.split("\\")
-        return f"{filename[-2]}\\{filename[-1]}"
+        filename = fullpath.split(path.sep)
+        return f"{filename[-2]}{path.sep}{filename[-1]}"
 
     def peek(self, loc: Union[int, Tuple[int, str]], scope: int):
         """
